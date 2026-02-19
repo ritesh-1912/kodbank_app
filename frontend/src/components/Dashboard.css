@@ -1,0 +1,281 @@
+.dashboard-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 32px;
+  padding: 56px 48px;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  width: 100%;
+  max-width: 680px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.dashboard-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-light), var(--accent-color), var(--primary-light));
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.dashboard-card h1 {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 50%, var(--accent-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.welcome-text {
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.balance-section {
+  margin-top: 40px;
+}
+
+.balance-btn {
+  padding: 18px 48px;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-light) 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 10px 25px rgba(30, 58, 138, 0.4),
+    0 0 0 0 rgba(59, 130, 246, 0);
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.5px;
+}
+
+.balance-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.balance-btn:hover:not(:disabled)::before {
+  width: 300px;
+  height: 300px;
+}
+
+.balance-btn:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 15px 35px rgba(30, 58, 138, 0.5),
+    0 0 0 6px rgba(59, 130, 246, 0.1);
+}
+
+.balance-btn:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.balance-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  color: var(--error-color);
+  margin-top: 24px;
+  padding: 16px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 16px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  font-weight: 500;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.balance-display {
+  margin-top: 48px;
+  padding: 40px;
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.1) 0%, 
+    rgba(139, 92, 246, 0.1) 50%,
+    rgba(245, 158, 11, 0.1) 100%);
+  border-radius: 24px;
+  animation: slideInBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid rgba(59, 130, 246, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.balance-display::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.1) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes slideInBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.balance-label {
+  font-size: 22px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  position: relative;
+  z-index: 1;
+}
+
+.balance-amount {
+  font-size: 56px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+  letter-spacing: -1px;
+}
+
+.balance-celebration {
+  font-size: 64px;
+  margin-top: 16px;
+  animation: bounceCelebrate 1.2s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+}
+
+@keyframes bounceCelebrate {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+}
+
+/* Floating particles effect */
+.dashboard-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(3px 3px at 20% 30%, rgba(59, 130, 246, 0.4), transparent),
+    radial-gradient(2px 2px at 60% 70%, rgba(139, 92, 246, 0.4), transparent),
+    radial-gradient(2px 2px at 50% 50%, rgba(245, 158, 11, 0.5), transparent),
+    radial-gradient(1px 1px at 80% 10%, rgba(59, 130, 246, 0.3), transparent),
+    radial-gradient(3px 3px at 90% 60%, rgba(139, 92, 246, 0.3), transparent),
+    radial-gradient(2px 2px at 10% 80%, rgba(245, 158, 11, 0.3), transparent);
+  background-size: 300% 300%;
+  animation: particleMove 30s ease infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+@keyframes particleMove {
+  0%, 100% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 50% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+}
