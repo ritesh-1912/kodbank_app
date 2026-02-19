@@ -10,11 +10,19 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const VERCEL_URL = process.env.VERCEL_URL;
 
 // CORS middleware - must be first, before any routes
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (origin === FRONTEND_URL || origin?.includes('localhost:3000')) {
+  const allowedOrigins = [
+    FRONTEND_URL,
+    VERCEL_URL ? `https://${VERCEL_URL}` : null,
+    process.env.VERCEL ? `https://${process.env.VERCEL_URL}` : null
+  ].filter(Boolean);
+  
+  // Allow requests from frontend URL, Vercel URL, or localhost
+  if (origin && (allowedOrigins.includes(origin) || origin.includes('localhost:3000') || origin.includes('vercel.app'))) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', 'true');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -58,7 +66,13 @@ app.use((req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Frontend URL: ${FRONTEND_URL}`);
-});
+// Export for Vercel serverless functions
+export default app;
+
+// Only listen if not in Vercel environment
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Frontend URL: ${FRONTEND_URL}`);
+  });
+}

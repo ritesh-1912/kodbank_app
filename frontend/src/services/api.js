@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Use relative URL to leverage Vite proxy (which handles CORS)
-const API_BASE_URL = '/api';
+// Use environment variable for API URL, fallback to relative URL for Vite proxy in dev
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

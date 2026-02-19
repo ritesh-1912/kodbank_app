@@ -104,7 +104,7 @@ export const login = async (req, res) => {
     // Set token as HTTP-only cookie
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false, // Allow HTTP in development
+      secure: process.env.NODE_ENV === 'production' || process.env.VERCEL === '1', // HTTPS in production
       sameSite: 'lax', // Changed from 'strict' to 'lax' for better compatibility
       maxAge: 24 * 60 * 60 * 1000 // 24 hours in milliseconds
     });
