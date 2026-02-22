@@ -64,7 +64,7 @@ export const register = async (req, res) => {
     const errMsg = (error.message || '').toLowerCase();
 
     if (code === 'ECONNREFUSED' || code === 'ENOTFOUND' || code === 'ETIMEDOUT' || errMsg.includes('connect') || errMsg.includes('econnrefused')) {
-      message = 'Database connection failed. Check DB_HOST, DB_PORT, and that Aiven allows connections from Vercel.';
+      message = 'Database connection failed (host not found). In Vercel: Project → Settings → Environment Variables, add DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME (use your Aiven host), then Redeploy.';
     } else if (code === 'ER_DUP_ENTRY' || errMsg.includes('duplicate')) {
       message = 'Username or email already exists.';
     } else if (code === 'ER_ACCESS_DENIED' || errMsg.includes('access denied')) {
