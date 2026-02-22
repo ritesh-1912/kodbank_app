@@ -63,7 +63,18 @@ const Register = () => {
       await register(formData);
       navigate('/login', { state: { message: 'Registration successful! Please login.' } });
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.response?.data?.errors?.[0]?.msg || 'Registration failed. Please try again.';
+      const data = error.response?.data;
+      const isHtml = typeof data === 'string' && data.includes('Serverless Function');
+      let errorMessage;
+      if (!error.response) {
+        errorMessage = 'Cannot reach server. Check deployment and try again.';
+      } else if (isHtml && error.response?.status === 500) {
+        errorMessage = 'Server error: API crashed. Check Vercel env vars (DB_*, JWT_SECRET) and redeploy.';
+      } else {
+        errorMessage = data?.message || data?.errors?.[0]?.msg || 'Registration failed. Please try again.';
+        if (data?.hint) errorMessage += ` — ${data.hint}`;
+        else if (data?.code) errorMessage += ` [${data.code}]`;
+      }
       setErrors({ submit: errorMessage });
     } finally {
       setLoading(false);

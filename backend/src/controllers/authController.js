@@ -59,27 +59,32 @@ export const register = async (req, res) => {
   } catch (error) {
     console.error('Registration error:', error);
 
-    // Return a safe message; include detail only for known client/server errors
     let message = 'Registration failed. Please try again.';
     const code = error.code || '';
     const errMsg = (error.message || '').toLowerCase();
 
-    if (code === 'ECONNREFUSED' || errMsg.includes('connect')) {
-      message = 'Database connection failed. Please try again later.';
+    if (code === 'ECONNREFUSED' || code === 'ENOTFOUND' || code === 'ETIMEDOUT' || errMsg.includes('connect') || errMsg.includes('econnrefused')) {
+      message = 'Database connection failed. Check DB_HOST, DB_PORT, and that Aiven allows connections from Vercel.';
     } else if (code === 'ER_DUP_ENTRY' || errMsg.includes('duplicate')) {
       message = 'Username or email already exists.';
     } else if (code === 'ER_ACCESS_DENIED' || errMsg.includes('access denied')) {
-      message = 'Database configuration error.';
+      message = 'Database credentials wrong. Check DB_USER and DB_PASSWORD in Vercel env.';
+    } else if (code === 'ER_NO_SUCH_TABLE' || errMsg.includes('doesn\'t exist')) {
+      message = 'Database table missing. Run database-setup.sql in Aiven.';
     } else if (process.env.NODE_ENV !== 'production' && process.env.VERCEL !== '1') {
       message = error.message || message;
     }
 
-    res.status(500).json({
+    const body = {
       success: false,
       message,
-      ...(process.env.NODE_ENV !== 'production' && process.env.VERCEL !== '1' && { error: error.message }),
       ...(error.code && { code: error.code })
-    });
+    };
+    // On Vercel, include hint so user can see actual error in Network tab or UI
+    if (process.env.VERCEL === '1' && message === 'Registration failed. Please try again.') {
+      body.hint = error.message || String(error);
+    }
+    res.status(500).json(body);
   }
 };
 
