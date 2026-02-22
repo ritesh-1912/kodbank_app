@@ -91,21 +91,53 @@
 }
 
 .bank-nav-item-kodai {
+  position: relative;
   width: 100%;
   text-align: left;
-  background: none;
-  border: 1px solid transparent;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.02) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.15);
   cursor: pointer;
   font-family: inherit;
   font-size: 15px;
   font-weight: 500;
-  color: #94a3b8;
+  color: #e2e8f0;
+  box-shadow: 0 0 20px -4px rgba(245, 158, 11, 0.12);
+  overflow: hidden;
+}
+
+.bank-nav-item-kodai::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(245, 158, 11, 0.4) 20%,
+    rgba(245, 158, 11, 0.8) 50%,
+    rgba(245, 158, 11, 0.4) 80%,
+    transparent 100%
+  );
+  background-size: 100% 200%;
+  animation: kodaiBorderFlow 3s ease-in-out infinite;
+}
+
+@keyframes kodaiBorderFlow {
+  0%, 100% { background-position: 0% 0%; opacity: 0.9; }
+  50% { background-position: 0% 100%; opacity: 1; }
 }
 
 .bank-nav-item-kodai:hover {
-  background: rgba(245, 158, 11, 0.12);
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.16) 0%, rgba(245, 158, 11, 0.06) 100%);
   color: #f59e0b;
-  border-color: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 24px -2px rgba(245, 158, 11, 0.2);
+}
+
+.bank-nav-item-kodai:hover::before {
+  animation-duration: 2s;
 }
 
 .bank-nav-icon-sparkle {
