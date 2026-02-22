@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
-import { checkBalance, getCards, getTransactions, transfer as apiTransfer, addCard as apiAddCard } from '../services/api';
+import { checkBalance, getCards, getTransactions, transfer as apiTransfer, addCard as apiAddCard, askKodAI } from '../services/api';
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -35,6 +35,13 @@ const Dashboard = () => {
   const [txFilterType, setTxFilterType] = useState('');
   const [txSearch, setTxSearch] = useState('');
   const [txSearchDebounced, setTxSearchDebounced] = useState('');
+
+  /* Ask KodAI */
+  const [askKodAIOpen, setAskKodAIOpen] = useState(false);
+  const [aiMessage, setAiMessage] = useState('');
+  const [aiMessages, setAiMessages] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState('');
 
   const loadBalance = useCallback(async () => {
     try {
@@ -220,6 +227,33 @@ const Dashboard = () => {
     }
   };
 
+  const openAskKodAI = () => {
+    setAskKodAIOpen(true);
+    setAiMessages([]);
+    setAiMessage('');
+    setAiError('');
+  };
+
+  const handleSendKodAI = async (e) => {
+    e.preventDefault();
+    const text = aiMessage.trim();
+    if (!text || aiLoading) return;
+    setAiError('');
+    setAiMessages(prev => [...prev, { role: 'user', text }]);
+    setAiMessage('');
+    setAiLoading(true);
+    try {
+      const res = await askKodAI({ message: text });
+      setAiMessages(prev => [...prev, { role: 'assistant', text: res.reply || 'No reply.' }]);
+    } catch (err) {
+      const msg = err.response?.data?.message || 'KodAI is unavailable. Try again.';
+      setAiError(msg);
+      if (err.response?.status === 401) setTimeout(() => navigate('/login'), 2000);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   const formatDate = (d) => {
     if (!d) return '—';
     const date = new Date(d);
@@ -275,6 +309,9 @@ const Dashboard = () => {
             </button>
             <button type="button" className="bank-btn bank-btn-primary" onClick={openSendMoney}>
               Send Money
+            </button>
+            <button type="button" className="bank-btn bank-btn-kodai" onClick={openAskKodAI}>
+              Ask KodAI
             </button>
           </div>
         </header>
@@ -449,6 +486,52 @@ const Dashboard = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Ask KodAI modal */}
+      {askKodAIOpen && (
+        <div className="bank-modal-overlay" onClick={() => !aiLoading && setAskKodAIOpen(false)}>
+          <div className="bank-modal bank-modal-chat" onClick={e => e.stopPropagation()}>
+            <div className="bank-modal-header">
+              <h3>KodAI</h3>
+              <button type="button" className="bank-modal-close" onClick={() => !aiLoading && setAskKodAIOpen(false)} aria-label="Close">×</button>
+            </div>
+            <div className="bank-chat-body">
+              <div className="bank-chat-messages">
+                {aiMessages.length === 0 && (
+                  <p className="bank-chat-placeholder">Ask me anything about Kodbank: balance, transfers, cards, UID, or how to use the app.</p>
+                )}
+                {aiMessages.map((m, i) => (
+                  <div key={i} className={`bank-chat-bubble bank-chat-bubble-${m.role}`}>
+                    <span className="bank-chat-bubble-label">{m.role === 'user' ? 'You' : 'KodAI'}</span>
+                    <span className="bank-chat-bubble-text">{m.text}</span>
+                  </div>
+                ))}
+                {aiLoading && (
+                  <div className="bank-chat-bubble bank-chat-bubble-assistant">
+                    <span className="bank-chat-bubble-label">KodAI</span>
+                    <span className="bank-chat-bubble-text bank-chat-typing">Thinking...</span>
+                  </div>
+                )}
+              </div>
+              {aiError && <div className="bank-modal-error bank-chat-error">{aiError}</div>}
+              <form onSubmit={handleSendKodAI} className="bank-chat-form">
+                <input
+                  type="text"
+                  value={aiMessage}
+                  onChange={(e) => setAiMessage(e.target.value)}
+                  placeholder="Type your question..."
+                  className="bank-chat-input"
+                  disabled={aiLoading}
+                  autoComplete="off"
+                />
+                <button type="submit" className="bank-btn bank-btn-primary bank-chat-send" disabled={aiLoading || !aiMessage.trim()}>
+                  Send
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       )}

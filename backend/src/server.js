@@ -8,6 +8,7 @@ import balanceRoutes from './routes/balanceRoutes.js';
 import cardsRoutes from './routes/cardsRoutes.js';
 import transactionsRoutes from './routes/transactionsRoutes.js';
 import transferRoutes from './routes/transferRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
 
 dotenv.config();
 
@@ -50,6 +51,7 @@ app.use('/api/balance', balanceRoutes);
 app.use('/api/cards', cardsRoutes);
 app.use('/api/transactions', transactionsRoutes);
 app.use('/api/transfer', transferRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

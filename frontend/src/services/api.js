@@ -68,4 +68,12 @@ export const addCard = async (body = {}) => {
   return response.data;
 };
 
+/**
+ * Send a message to KodAI (requires authentication)
+ */
+export const askKodAI = async (body) => {
+  const response = await api.post('/ai', body);
+  return response.data;
+};
+
 export default api;
