@@ -2,16 +2,16 @@ import pool from '../config/database.js';
 import bcrypt from 'bcryptjs';
 
 /**
- * Create a new user with default balance of 100000
+ * Create a new user with default balance of 100000. UID is auto-assigned by database.
  */
-export const createUser = async (uid, username, email, password, phone, role = 'customer') => {
+export const createUser = async (username, email, password, phone, role = 'customer') => {
   const hashedPassword = await bcrypt.hash(password, 12);
   const balance = 100000; // Default initial balance
 
   const [result] = await pool.execute(
-    `INSERT INTO KodUser (uid, username, email, password, phone, role, balance) 
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    [uid, username, email, hashedPassword, phone, role, balance]
+    `INSERT INTO KodUser (username, email, password, phone, role, balance) 
+     VALUES (?, ?, ?, ?, ?, ?)`,
+    [username, email, hashedPassword, phone, role, balance]
   );
 
   return result.insertId;

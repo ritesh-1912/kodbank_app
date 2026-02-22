@@ -18,7 +18,7 @@ export const register = async (req, res) => {
       });
     }
 
-    const { uid, username, email, password, phone, role } = req.body;
+    const { username, email, password, phone, role } = req.body;
 
     // Enforce role to be 'customer' only
     const userRole = role === 'customer' ? 'customer' : 'customer';
@@ -41,8 +41,8 @@ export const register = async (req, res) => {
       });
     }
 
-    // Create user (balance defaults to 100000 in model)
-    await createUser(uid, username, email, password, phone, userRole);
+    // Create user (UID auto-assigned by database, balance defaults to 100000)
+    await createUser(username, email, password, phone, userRole);
 
     res.status(201).json({
       success: true,
@@ -127,14 +127,13 @@ export const login = async (req, res) => {
 };
 
 /**
- * Validation rules for registration
+ * Validation rules for registration (UID is auto-assigned by database)
  */
 export const validateRegister = [
-  body('uid').notEmpty().withMessage('UID is required'),
-  body('username').trim().isLength({ min: 3 }).withMessage('Username must be at least 3 characters'),
+  body('username').trim().isLength({ min: 2 }).withMessage('Username must be at least 2 characters'),
   body('email').isEmail().withMessage('Valid email is required'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
-  body('phone').notEmpty().withMessage('Phone number is required'),
+  body('phone').trim().notEmpty().withMessage('Phone number is required').matches(/^[0-9]+$/).withMessage('Phone number must contain only digits'),
   body('role').optional().equals('customer').withMessage('Role must be customer')
 ];
 
