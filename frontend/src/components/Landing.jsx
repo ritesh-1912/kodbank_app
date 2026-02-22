@@ -1,28 +1,32 @@
-import { Link } from 'react-router-dom';
-import './Landing.css';
+import { Link } from "react-router-dom";
+import "./Landing.css";
 
 const Landing = () => {
   const features = [
     {
-      title: 'Check Balance',
-      description: 'View your balance instantly. Toggle visibility with Show or Hide for privacy.',
-      icon: '◆'
+      title: "Check Balance",
+      description:
+        "View your balance instantly. Toggle visibility with Show or Hide for privacy.",
+      icon: "◆",
     },
     {
-      title: 'Send Money',
-      description: 'Transfer to any Kodbank user by username or UID. Add an optional note.',
-      icon: '↔'
+      title: "Send Money",
+      description:
+        "Transfer to any Kodbank user by username or UID. Add an optional note.",
+      icon: "↔",
     },
     {
-      title: 'Cards',
-      description: 'Manage debit and credit cards. Add Visa or Mastercard with one click.',
-      icon: '◇'
+      title: "Cards",
+      description:
+        "Manage debit and credit cards. Add Visa or Mastercard with one click.",
+      icon: "◇",
     },
     {
-      title: 'KodAI Assistant',
-      description: 'Get help anytime. Ask about balance, transfers, UID, or how to use the app.',
-      icon: '✦'
-    }
+      title: "KodAI Assistant",
+      description:
+        "Get help anytime. Ask about balance, transfers, UID, or how to use the app.",
+      icon: "✦",
+    },
   ];
 
   return (
@@ -34,8 +38,12 @@ const Landing = () => {
             <span className="landing-logo-text">Kodbank</span>
           </Link>
           <nav className="landing-nav">
-            <Link to="/login" className="landing-nav-link">Sign in</Link>
-            <Link to="/register" className="landing-nav-btn">Create account</Link>
+            <Link to="/login" className="landing-nav-link">
+              Sign in
+            </Link>
+            <Link to="/register" className="landing-nav-btn">
+              Create account
+            </Link>
           </nav>
         </div>
       </header>
@@ -47,11 +55,16 @@ const Landing = () => {
             Banking that’s <span className="landing-hero-accent">simple</span> and <span className="landing-hero-accent">secure</span>
           </h1>
           <p className="landing-hero-sub">
-            Open an account in minutes. Check your balance, send money, and manage cards—all in one place.
+            Open an account in minutes. Check your balance, send money, and
+            manage cards—all in one place.
           </p>
           <div className="landing-hero-cta">
-            <Link to="/register" className="landing-cta-primary">Create account</Link>
-            <Link to="/login" className="landing-cta-secondary">Sign in</Link>
+            <Link to="/register" className="landing-cta-primary">
+              Create account
+            </Link>
+            <Link to="/login" className="landing-cta-secondary">
+              Sign in
+            </Link>
           </div>
         </section>
 
@@ -59,7 +72,11 @@ const Landing = () => {
           <h2 className="landing-section-title">Everything you need</h2>
           <div className="landing-features-grid">
             {features.map((f, i) => (
-              <div key={i} className="landing-feature-card" style={{ animationDelay: `${i * 0.08}s` }}>
+              <div
+                key={i}
+                className="landing-feature-card"
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
                 <div className="landing-feature-icon">{f.icon}</div>
                 <h3 className="landing-feature-title">{f.title}</h3>
                 <p className="landing-feature-desc">{f.description}</p>
@@ -88,10 +105,16 @@ const Landing = () => {
         <section className="landing-cta-section">
           <div className="landing-cta-card">
             <h2 className="landing-cta-card-title">Ready to get started?</h2>
-            <p className="landing-cta-card-sub">Create your free account and start banking in minutes.</p>
+            <p className="landing-cta-card-sub">
+              Create your free account and start banking in minutes.
+            </p>
             <div className="landing-cta-card-buttons">
-              <Link to="/register" className="landing-cta-primary">Create account</Link>
-              <Link to="/login" className="landing-cta-secondary">Sign in</Link>
+              <Link to="/register" className="landing-cta-primary">
+                Create account
+              </Link>
+              <Link to="/login" className="landing-cta-secondary">
+                Sign in
+              </Link>
             </div>
           </div>
         </section>
@@ -101,9 +124,13 @@ const Landing = () => {
         <div className="landing-footer-inner">
           <span className="landing-logo-text">Kodbank</span>
           <span className="landing-footer-sep">·</span>
-          <Link to="/login" className="landing-footer-link">Sign in</Link>
+          <Link to="/login" className="landing-footer-link">
+            Sign in
+          </Link>
           <span className="landing-footer-sep">·</span>
-          <Link to="/register" className="landing-footer-link">Create account</Link>
+          <Link to="/register" className="landing-footer-link">
+            Create account
+          </Link>
         </div>
       </footer>
     </div>
