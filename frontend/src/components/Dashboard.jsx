@@ -43,6 +43,7 @@ const Dashboard = () => {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState('');
   const chatMessagesRef = useRef(null);
+  const scrollAnchorRef = useRef(null);
 
   const loadBalance = useCallback(async () => {
     try {
@@ -237,12 +238,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!askKodAIOpen) return;
-    const el = chatMessagesRef.current;
-    if (!el) return;
-    const id = requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-    });
-    return () => cancelAnimationFrame(id);
+    const timer = setTimeout(() => {
+      scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }, 100);
+    return () => clearTimeout(timer);
   }, [askKodAIOpen, aiMessages, aiLoading]);
 
   const handleSendKodAI = async (e) => {
@@ -526,6 +525,7 @@ const Dashboard = () => {
                     <span className="bank-chat-bubble-text bank-chat-typing">Thinking...</span>
                   </div>
                 )}
+                <div ref={scrollAnchorRef} aria-hidden="true" style={{ height: 0, flexShrink: 0 }} />
               </div>
               {aiError && <div className="bank-modal-error bank-chat-error">{aiError}</div>}
               <form onSubmit={handleSendKodAI} className="bank-chat-form">

@@ -3,17 +3,31 @@ const HF_CHAT_URL = 'https://router.huggingface.co/v1/chat/completions';
 // Use :fastest so the router picks an enabled provider. Enable providers at https://huggingface.co/settings/inference-providers
 const HF_MODEL = 'meta-llama/Llama-3.2-1B-Instruct:fastest';
 
-const SYSTEM_PROMPT = `You are KodAI, the assistant for Kodbank. Kodbank is a web app (website), not a mobile app. Only use the facts below. Do not invent menus, tabs, or features. If unsure, say "In Kodbank you can..." and stick to this list.
+const SYSTEM_PROMPT = `You are KodAI, the assistant for Kodbank. Kodbank is a web app only (no mobile app). Use ONLY the facts below. Do not invent any menu, tab, section, or button name.
 
-Facts about Kodbank:
-- It is a web application in a browser. There is no separate mobile app.
-- After login you see a Dashboard with: Total Balance (use "Check Balance" to see it, and "Show"/"Hide" to toggle visibility), "Send Money" (transfer to another user by username or UID), "Ask KodAI" (this chat), My Cards (card list and "+ Add card"), and Recent Transactions (list with type and search filters).
-- Registration: you enter username, email, password, phone. After signup you get a numeric Customer ID (UID) on the next screen; save it. You sign in with username and password.
-- Transfers: use "Send Money" on the dashboard, enter recipient username or UID, amount in rupees (₹), and optional note.
-- Cards: each card shows last 4 digits, type (Debit/Credit), brand (Visa/Mastercard). You can add more cards with "+ Add card".
-- Transactions: list shows credit/debit, description, amount, date. You can filter by type (All/Credit/Debit) and search by description.
+Facts (use only these):
+- Kodbank is a website in a browser. No mobile app.
+- Dashboard has: "Check Balance" button (click it to see balance; then "Show"/"Hide" to toggle), "Send Money", "Ask KodAI", My Cards with "+ Add card", Recent Transactions with filters and search.
+- To see balance: click "Check Balance" on the dashboard. There is no "Pin", "Account tab", or "Balance" button.
+- Registration: username, email, password, phone. After signup you get a UID on the next screen. Sign in with username and password.
+- Send Money: recipient username or UID, amount (₹), optional note.
+- Cards: last 4 digits, Debit/Credit, Visa/Mastercard. Add more with "+ Add card".
+- Transactions: list with credit/debit, description, amount, date; filter and search.
 
-Rules: Answer in 1-3 short sentences. Only describe Kodbank as above. Do not mention other apps, "Laporan", "Account tab", or features not in this list. If the user asks something not about Kodbank, say you can only help with Kodbank.`;
+Rules: 1–3 short sentences. NEVER mention: Pin, Account tab, Laporan, Lambangkan, "Balance" button, or any tab/section not in the list above. For balance, say only: click "Check Balance" on the dashboard. If not about Kodbank, say you only help with Kodbank.`;
+
+const GREETING_REPLY = "Hi! I'm KodAI. I can help with Kodbank—checking balance, Send Money, cards, UID, or transactions. What would you like to know?";
+
+const GREETING_PATTERNS = [
+  /^hi\s*!?\s*$/i, /^hello\s*!?\s*$/i, /^hey\s*!?\s*$/i, /^hiya\s*$/i,
+  /^good\s+(morning|afternoon|evening)\s*!?\s*$/i, /^howdy\s*$/i, /^greetings\s*$/i,
+  /^yo\s*$/i, /^sup\s*$/i, /^heya?\s*$/i, /^hi\s+there\s*!?\s*$/i
+];
+function isGreeting(text) {
+  const t = text.trim().toLowerCase();
+  if (t.length > 25) return false;
+  return GREETING_PATTERNS.some(p => p.test(t)) || /^(hi|hey|hello|heya?)\s*!?\s*$/i.test(t);
+}
 
 /**
  * POST /api/ai – chat with KodAI (Hugging Face Router – chat completions API)
@@ -25,6 +39,10 @@ export const chat = async (req, res) => {
     const trimmed = typeof message === 'string' ? message.trim() : '';
     if (!trimmed) {
       return res.status(400).json({ success: false, message: 'Message is required.' });
+    }
+
+    if (isGreeting(trimmed)) {
+      return res.json({ success: true, reply: GREETING_REPLY, model: 'kodai' });
     }
 
     const token = process.env.HUGGINGFACE_TOKEN;
