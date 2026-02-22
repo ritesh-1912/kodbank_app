@@ -1,11 +1,11 @@
-// Hugging Face Inference API – we use a model from Hugging Face (see https://huggingface.co/inference-api)
-const HF_MODEL = 'google/flan-t5-base';
-const HF_API_URL = `https://api-inference.huggingface.co/models/${HF_MODEL}`;
+// Hugging Face Router API (https://router.huggingface.co) – replaces deprecated api-inference.huggingface.co
+const HF_CHAT_URL = 'https://router.huggingface.co/v1/chat/completions';
+const HF_MODEL = 'HuggingFaceH4/zephyr-7b-beta';
 
 const SYSTEM_PROMPT = `You are KodAI, the Kodbank banking assistant. Answer briefly. Only answer questions about the Kodbank app: balance, transfers, cards, UID, transactions. Do not perform actions; only explain. If the question is not about Kodbank, say you can only help with Kodbank. Keep answers to 1-3 sentences.`;
 
 /**
- * POST /api/ai – chat with KodAI (Hugging Face Inference API – uses a Hugging Face model)
+ * POST /api/ai – chat with KodAI (Hugging Face Router – chat completions API)
  * Body: { message: string }
  */
 export const chat = async (req, res) => {
@@ -24,24 +24,23 @@ export const chat = async (req, res) => {
       });
     }
 
-    const inputs = `${SYSTEM_PROMPT}\n\nQuestion: ${trimmed}\n\nAnswer:`;
-
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 45000);
 
-    const response = await fetch(HF_API_URL, {
+    const response = await fetch(HF_CHAT_URL, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        inputs,
-        parameters: {
-          max_length: 150,
-          min_length: 10,
-          do_sample: false
-        }
+        model: HF_MODEL,
+        messages: [
+          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'user', content: trimmed }
+        ],
+        max_tokens: 256,
+        stream: false
       }),
       signal: controller.signal
     });
@@ -56,17 +55,16 @@ export const chat = async (req, res) => {
       else if (response.status >= 500) msg = 'KodAI service is temporarily unavailable. Try again in a few seconds.';
       try {
         const errJson = JSON.parse(errText);
-        if (errJson.error && typeof errJson.error === 'string') msg = errJson.error;
+        if (errJson.error?.message) msg = errJson.error.message;
+        else if (errJson.error && typeof errJson.error === 'string') msg = errJson.error;
       } catch (_) {}
-      console.error('HF Inference API error:', response.status, errText);
+      console.error('HF Router API error:', response.status, errText);
       const status = response.status === 401 ? 503 : (response.status === 429 ? 429 : 502);
       return res.status(status).json({ success: false, message: msg });
     }
 
     const data = await response.json();
-    const generated = Array.isArray(data) && data[0]?.generated_text
-      ? data[0].generated_text.trim()
-      : (data?.generated_text ?? '').trim();
+    const generated = data?.choices?.[0]?.message?.content?.trim() ?? '';
 
     res.json({
       success: true,
