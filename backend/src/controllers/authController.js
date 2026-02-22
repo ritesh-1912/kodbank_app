@@ -18,10 +18,18 @@ export const register = async (req, res) => {
       });
     }
 
-    const { username, email, password, phone, role } = req.body;
+    const username = String(req.body.username || '').trim();
+    const email = String(req.body.email || '').trim().toLowerCase();
+    const password = String(req.body.password || '');
+    const phone = String(req.body.phone || '').trim();
+    const userRole = 'customer';
 
-    // Enforce role to be 'customer' only
-    const userRole = role === 'customer' ? 'customer' : 'customer';
+    if (!username || !email || !password || !phone) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username, email, password and phone are required'
+      });
+    }
 
     // Check if username already exists
     const existingUser = await findByUsername(username);
@@ -50,9 +58,27 @@ export const register = async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
+
+    // Return a safe message; include detail only for known client/server errors
+    let message = 'Registration failed. Please try again.';
+    const code = error.code || '';
+    const errMsg = (error.message || '').toLowerCase();
+
+    if (code === 'ECONNREFUSED' || errMsg.includes('connect')) {
+      message = 'Database connection failed. Please try again later.';
+    } else if (code === 'ER_DUP_ENTRY' || errMsg.includes('duplicate')) {
+      message = 'Username or email already exists.';
+    } else if (code === 'ER_ACCESS_DENIED' || errMsg.includes('access denied')) {
+      message = 'Database configuration error.';
+    } else if (process.env.NODE_ENV !== 'production' && process.env.VERCEL !== '1') {
+      message = error.message || message;
+    }
+
     res.status(500).json({
       success: false,
-      message: 'Internal server error during registration'
+      message,
+      ...(process.env.NODE_ENV !== 'production' && process.env.VERCEL !== '1' && { error: error.message }),
+      ...(error.code && { code: error.code })
     });
   }
 };

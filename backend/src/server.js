@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import pool from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import balanceRoutes from './routes/balanceRoutes.js';
 
@@ -47,6 +48,22 @@ app.use('/api/balance', balanceRoutes);
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Kodbank API is running' });
+});
+
+// Database health check (for debugging registration 500 errors)
+app.get('/api/health/db', async (req, res) => {
+  try {
+    await pool.execute('SELECT 1');
+    res.json({ success: true, message: 'Database connected' });
+  } catch (err) {
+    console.error('DB health check failed:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Database connection failed',
+      error: err.message,
+      code: err.code
+    });
+  }
 });
 
 // Error handling middleware
