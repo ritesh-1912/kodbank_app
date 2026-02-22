@@ -543,7 +543,7 @@ const Dashboard = () => {
                   Send
                 </button>
               </form>
-              <p className="bank-chat-powered-footer">Powered by Hugging Face</p>
+              <p className="bank-chat-powered-footer">Model: Meta Llama 3.2 1B Instruct</p>
             </div>
           </div>
         </div>
