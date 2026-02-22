@@ -293,6 +293,10 @@ const Dashboard = () => {
             <span className="bank-nav-icon">↔</span>
             Transactions
           </Link>
+          <button type="button" className="bank-nav-item bank-nav-item-kodai" onClick={openAskKodAI}>
+            <span className="bank-nav-icon bank-nav-icon-sparkle" aria-hidden="true">✨</span>
+            Ask KodAI
+          </button>
         </nav>
         <div className="bank-sidebar-footer">
           <Link to="/login" className="bank-nav-item">
@@ -319,9 +323,6 @@ const Dashboard = () => {
             </button>
             <button type="button" className="bank-btn bank-btn-primary" onClick={openSendMoney}>
               Send Money
-            </button>
-            <button type="button" className="bank-btn bank-btn-kodai" onClick={openAskKodAI}>
-              Ask KodAI
             </button>
           </div>
         </header>

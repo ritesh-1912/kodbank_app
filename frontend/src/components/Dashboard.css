@@ -90,6 +90,33 @@
   opacity: 0.9;
 }
 
+.bank-nav-item-kodai {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.bank-nav-item-kodai:hover {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.bank-nav-icon-sparkle {
+  font-size: 16px;
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+}
+
+.bank-nav-item-kodai:hover .bank-nav-icon-sparkle {
+  filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.6));
+}
+
 .bank-sidebar-footer {
   margin-top: auto;
   padding-top: 20px;
