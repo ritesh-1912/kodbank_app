@@ -44,7 +44,7 @@ const Landing = () => {
         <section className="landing-hero">
           <div className="landing-hero-glow" aria-hidden="true" />
           <h1 className="landing-hero-title">
-            Banking that’s <span className="landing-hero-accent">simple</span> and secure
+            Banking that’s <span className="landing-hero-accent">simple</span> and <span className="landing-hero-accent">secure</span>
           </h1>
           <p className="landing-hero-sub">
             Open an account in minutes. Check your balance, send money, and manage cards—all in one place.
