@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { checkBalance, getCards, getTransactions, transfer as apiTransfer, addCard as apiAddCard, askKodAI } from '../services/api';
@@ -42,6 +42,7 @@ const Dashboard = () => {
   const [aiMessages, setAiMessages] = useState([]);
   const [aiLoading, setAiLoading] = useState(false);
   const [aiError, setAiError] = useState('');
+  const chatMessagesRef = useRef(null);
 
   const loadBalance = useCallback(async () => {
     try {
@@ -233,6 +234,16 @@ const Dashboard = () => {
     setAiMessage('');
     setAiError('');
   };
+
+  useEffect(() => {
+    if (!askKodAIOpen) return;
+    const el = chatMessagesRef.current;
+    if (!el) return;
+    const id = requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+    return () => cancelAnimationFrame(id);
+  }, [askKodAIOpen, aiMessages, aiLoading]);
 
   const handleSendKodAI = async (e) => {
     e.preventDefault();
@@ -499,7 +510,7 @@ const Dashboard = () => {
               <button type="button" className="bank-modal-close" onClick={() => !aiLoading && setAskKodAIOpen(false)} aria-label="Close">×</button>
             </div>
             <div className="bank-chat-body">
-              <div className="bank-chat-messages">
+              <div className="bank-chat-messages" ref={chatMessagesRef}>
                 {aiMessages.length === 0 && (
                   <p className="bank-chat-placeholder">Ask me anything about Kodbank: balance, transfers, cards, UID, or how to use the app.</p>
                 )}
