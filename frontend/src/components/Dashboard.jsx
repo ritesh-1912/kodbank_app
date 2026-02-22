@@ -531,6 +531,7 @@ const Dashboard = () => {
                   Send
                 </button>
               </form>
+              <p className="bank-chat-powered-footer">Powered by Hugging Face</p>
             </div>
           </div>
         </div>

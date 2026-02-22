@@ -19,6 +19,9 @@ export const listTransactions = async (req, res) => {
     res.json({ success: true, transactions });
   } catch (err) {
     console.error('Transactions list error:', err);
+    if (err.code === 'ER_NO_SUCH_TABLE') {
+      return res.json({ success: true, transactions: [] });
+    }
     res.status(500).json({ success: false, message: 'Failed to fetch transactions' });
   }
 };

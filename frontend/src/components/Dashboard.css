@@ -848,6 +848,14 @@
   padding: 12px 20px;
 }
 
+.bank-chat-powered-footer {
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+  margin: 10px 0 0;
+  padding: 0;
+}
+
 @media (max-width: 768px) {
   .bank-sidebar {
     width: 100%;

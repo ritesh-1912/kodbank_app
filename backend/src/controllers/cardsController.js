@@ -14,6 +14,9 @@ export const listCards = async (req, res) => {
     res.json({ success: true, cards });
   } catch (err) {
     console.error('Cards list error:', err);
+    if (err.code === 'ER_NO_SUCH_TABLE') {
+      return res.json({ success: true, cards: [] });
+    }
     res.status(500).json({ success: false, message: 'Failed to fetch cards' });
   }
 };
@@ -33,6 +36,9 @@ export const createCard = async (req, res) => {
     res.status(201).json({ success: true, card: { id: card.id, last_four: card.last_four, cardType: card.cardType, brand: card.brand } });
   } catch (err) {
     console.error('Add card error:', err);
+    if (err.code === 'ER_NO_SUCH_TABLE') {
+      return res.status(503).json({ success: false, message: 'Cards are not set up yet. Run the database setup SQL to create the Card table.' });
+    }
     res.status(500).json({ success: false, message: 'Failed to add card' });
   }
 };
