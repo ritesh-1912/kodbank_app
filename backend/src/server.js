@@ -50,6 +50,26 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Kodbank API is running' });
 });
 
+// Env check: see if DB_* vars reach the serverless function (no secrets exposed)
+app.get('/api/health/env', (req, res) => {
+  const env = {
+    DB_HOST: !!process.env.DB_HOST,
+    DB_PORT: !!process.env.DB_PORT,
+    DB_USER: !!process.env.DB_USER,
+    DB_PASSWORD: !!process.env.DB_PASSWORD,
+    DB_NAME: !!process.env.DB_NAME,
+    JWT_SECRET: !!process.env.JWT_SECRET,
+    FRONTEND_URL: !!process.env.FRONTEND_URL
+  };
+  const allSet = env.DB_HOST && env.DB_PORT && env.DB_USER && env.DB_PASSWORD && env.DB_NAME;
+  res.json({
+    ok: allSet,
+    message: allSet ? 'All required DB env vars are set' : 'Some DB env vars are missing',
+    env,
+    hint: !process.env.DB_HOST ? 'DB_HOST is missing in Vercel. Add it, then Redeploy (Deployments → ⋯ → Redeploy).' : null
+  });
+});
+
 // Database health check (for debugging registration 500 errors)
 app.get('/api/health/db', async (req, res) => {
   try {

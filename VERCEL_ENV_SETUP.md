@@ -40,8 +40,34 @@ Your registration returns 500 because the **API runs on Vercel** and needs datab
 1. Open: `https://YOUR_VERCEL_URL.vercel.app/api/health`  
    You should see: `{"success":true,"message":"Kodbank API is running"}`
 
-2. Open: `https://YOUR_VERCEL_URL.vercel.app/api/health/db`  
+2. **Check if env vars reach the API:**  
+   Open: `https://YOUR_VERCEL_URL.vercel.app/api/health/env`  
+   You should see something like: `{"ok":true,"env":{"DB_HOST":true,"DB_PORT":true,...}}`  
+   If `DB_HOST` is `false`, the variable is **not** reaching the serverless function (see below).
+
+3. Open: `https://YOUR_VERCEL_URL.vercel.app/api/health/db`  
    - If DB is OK: `{"success":true,"message":"Database connected"}`  
    - If DB fails: you’ll see an error (e.g. connection refused). Fix the env vars and redeploy.
 
-3. Try **Register** again. If `/api/health/db` is OK and registration still fails, the error message on the page should give a hint (e.g. duplicate username/email).
+4. Try **Register** again.
+
+---
+
+## Still getting "Database connection failed (host not found) [ENOTFOUND]"?
+
+- **1. Confirm env vars are in the right place**  
+  Vercel → your **project** (e.g. kodbank_app) → **Settings** → **Environment Variables**.  
+  They must be on the **same project** that serves the app.
+
+- **2. Set them for the right environment**  
+  When adding each variable, tick **Production** (and **Preview** if you use branch deployments).  
+  If you only set "Preview" but you open the production URL, the API won’t see the vars.
+
+- **3. Redeploy after adding or changing**  
+  Env vars apply only to **new** deployments.  
+  Go to **Deployments** → **⋯** on the **latest** deployment → **Redeploy** (or push a new commit and wait for the new deployment to finish).
+
+- **4. Check `/api/health/env`**  
+  Open `https://YOUR_APP_URL.vercel.app/api/health/env`.  
+  If it shows `"DB_HOST": false`, the function still doesn’t see `DB_HOST`.  
+  Fix the steps above, then redeploy and check `/api/health/env` again.
