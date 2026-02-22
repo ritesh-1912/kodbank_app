@@ -62,11 +62,17 @@ app.get('/api/health/env', (req, res) => {
     FRONTEND_URL: !!process.env.FRONTEND_URL
   };
   const allSet = env.DB_HOST && env.DB_PORT && env.DB_USER && env.DB_PASSWORD && env.DB_NAME;
+  const onVercel = !!process.env.VERCEL;
   res.json({
     ok: allSet,
+    onVercel,
     message: allSet ? 'All required DB env vars are set' : 'Some DB env vars are missing',
     env,
-    hint: !process.env.DB_HOST ? 'DB_HOST is missing in Vercel. Add it, then Redeploy (Deployments → ⋯ → Redeploy).' : null
+    hint: !process.env.DB_HOST
+      ? (onVercel
+          ? 'DB_HOST is missing. Add in Project → Settings → Environment Variables, set for Production (and Preview), then Redeploy. If Root Directory is set, use repo root (.) so api/ gets env vars.'
+          : 'Set DB_HOST in .env or environment.')
+      : null
   });
 });
 

@@ -67,7 +67,7 @@ Your registration returns 500 because the **API runs on Vercel** and needs datab
   Env vars apply only to **new** deployments.  
   Go to **Deployments** → **⋯** on the **latest** deployment → **Redeploy** (or push a new commit and wait for the new deployment to finish).
 
-- **4. Check `/api/health/env`**  
+- **4. Check `/api/health/env` first**  
   Open `https://YOUR_APP_URL.vercel.app/api/health/env`.  
   If it shows `"DB_HOST": false`, the function still doesn’t see `DB_HOST`.  
-  Fix the steps above, then redeploy and check `/api/health/env` again.
+  Fix the steps above, then redeploy. **Root Directory** (Settings → General): leave empty so `api/` is deployed and gets env vars; if set to `frontend`, the API may not see them.
