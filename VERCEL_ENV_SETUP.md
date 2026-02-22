@@ -37,19 +37,20 @@ Your registration returns 500 because the **API runs on Vercel** and needs datab
 
 ## Check that it works
 
-1. Open: `https://YOUR_VERCEL_URL.vercel.app/api/health`  
+1. **Landing page:** Open `https://YOUR_VERCEL_URL.vercel.app/` – you should see the Kodbank landing page with Sign in / Create account.
+2. **API health:** Open: `https://YOUR_VERCEL_URL.vercel.app/api/health`  
    You should see: `{"success":true,"message":"Kodbank API is running"}`
 
-2. **Check if env vars reach the API:**  
+3. **Check if env vars reach the API:**  
    Open: `https://YOUR_VERCEL_URL.vercel.app/api/health/env`  
    You should see something like: `{"ok":true,"env":{"DB_HOST":true,"DB_PORT":true,...}}`  
    If `DB_HOST` is `false`, the variable is **not** reaching the serverless function (see below).
 
-3. Open: `https://YOUR_VERCEL_URL.vercel.app/api/health/db`  
+4. Open: `https://YOUR_VERCEL_URL.vercel.app/api/health/db`  
    - If DB is OK: `{"success":true,"message":"Database connected"}`  
    - If DB fails: you’ll see an error (e.g. connection refused). Fix the env vars and redeploy.
 
-4. Try **Register** again.
+5. Try **Register** again.
 
 ---
 

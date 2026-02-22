@@ -111,7 +111,7 @@
 - Run `database-setup.sql` manually in Aiven console if needed
 
 ### API Routes
-- Backend routes are at `/api/auth/*` and `/api/balance`
+- Backend routes: `/api/auth/*`, `/api/balance`, `/api/transfer`, `/api/cards`, `/api/transactions`, `/api/ai`, `/api/health`
 - Frontend should use `/api` as base URL (or full URL if separate deployment)
 
 ## Troubleshooting
@@ -136,11 +136,13 @@
 
 ## Testing After Deployment
 
-1. ✅ Test registration: `/register`
-2. ✅ Test login: `/login`
-3. ✅ Test balance check: `/dashboard` → Check Balance button
-4. ✅ Verify cookies are set (check browser DevTools)
-5. ✅ Verify JWT tokens work
+1. ✅ **Landing page**: Open `/` – hero, features, Sign in / Create account links
+2. ✅ **Sign in** → `/login`; **Create account** → `/register`
+3. ✅ Test registration: `/register`
+4. ✅ Test login: `/login`
+5. ✅ Test dashboard: `/dashboard` – balance, send money, cards, transactions, KodAI
+6. ✅ Verify cookies are set (browser DevTools)
+7. ✅ Verify JWT tokens work
 
 ## Production Checklist
 
