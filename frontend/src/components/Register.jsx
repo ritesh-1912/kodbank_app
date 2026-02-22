@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../services/api';
 import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
+  const exampleUid = useMemo(() => String(10000 + Math.floor(Math.random() * 90000)), []);
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -129,7 +130,11 @@ const Register = () => {
       <main className="auth-main">
         <div className="auth-card">
           <h1 className="auth-title">Create account</h1>
-          <p className="auth-subtitle">Open your account in a few steps. Your customer ID will be assigned automatically.</p>
+          <p className="auth-subtitle">Open your account in a few steps. You’ll receive a unique Customer ID (UID) when you sign up — save it for transfers and support.</p>
+          <div className="auth-uid-preview">
+            <span className="auth-uid-preview-label">Customer ID (UID) format</span>
+            <span className="auth-uid-preview-value">e.g. {exampleUid}</span>
+          </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">

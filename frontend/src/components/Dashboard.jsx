@@ -292,7 +292,7 @@ const Dashboard = () => {
                     className="bank-balance-toggle"
                     aria-label={balanceVisible ? 'Hide balance' : 'Show balance'}
                   >
-                    {balanceVisible ? '🙈' : '👁'}
+                    {balanceVisible ? 'Hide' : 'Show'}
                   </button>
                 )}
               </div>

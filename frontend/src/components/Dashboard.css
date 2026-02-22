@@ -318,14 +318,19 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 18px;
-  padding: 4px;
-  opacity: 0.8;
-  transition: opacity 0.2s;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
 }
 
 .bank-balance-toggle:hover {
-  opacity: 1;
+  color: #f59e0b;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .bank-balance-value {
