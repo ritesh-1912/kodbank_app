@@ -1,6 +1,6 @@
 {
   "buildCommand": "cd frontend && npm run build",
-  "installCommand": "npm run install:all",
+  "installCommand": "npm install && cd frontend && npm install",
   "outputDirectory": "frontend/dist",
   "functions": {
     "api/index.js": {
