@@ -50,11 +50,22 @@ export const register = async (req, res) => {
     }
 
     // Create user (UID auto-assigned by database, balance defaults to 100000)
-    await createUser(username, email, password, phone, userRole);
+    const uid = await createUser(username, email, password, phone, userRole);
+
+    // Seed default card and sample transactions for new user
+    const { insertDefaultCard } = await import('../models/Card.js');
+    const { insertSampleTransactions } = await import('../models/Transaction.js');
+    try {
+      await insertDefaultCard(uid);
+      await insertSampleTransactions(uid);
+    } catch (seedErr) {
+      console.warn('Seed card/transactions failed:', seedErr);
+    }
 
     res.status(201).json({
       success: true,
-      message: 'User registered successfully. Please login.'
+      message: 'User registered successfully. Please login.',
+      uid
     });
   } catch (error) {
     console.error('Registration error:', error);

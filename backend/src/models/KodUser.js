@@ -51,6 +51,52 @@ export const getBalanceByUsername = async (username) => {
 };
 
 /**
+ * Get uid by username (for cards/transactions)
+ */
+export const getUidByUsername = async (username) => {
+  const [rows] = await pool.execute(
+    'SELECT uid FROM KodUser WHERE username = ?',
+    [username]
+  );
+  return rows[0]?.uid ?? null;
+};
+
+/**
+ * Find user by uid (for transfers)
+ */
+export const findByUid = async (uid) => {
+  const [rows] = await pool.execute('SELECT uid, username, balance FROM KodUser WHERE uid = ?', [uid]);
+  return rows[0] || null;
+};
+
+/**
+ * Get balance by uid
+ */
+export const getBalanceByUid = async (uid) => {
+  const [rows] = await pool.execute('SELECT balance FROM KodUser WHERE uid = ?', [uid]);
+  return rows[0]?.balance ?? null;
+};
+
+/**
+ * Transfer amount from one user to another (call within a connection transaction)
+ */
+export const deductBalance = async (connection, uid, amount) => {
+  const [result] = await connection.execute(
+    'UPDATE KodUser SET balance = balance - ? WHERE uid = ? AND balance >= ?',
+    [amount, uid, amount]
+  );
+  return result.affectedRows === 1;
+};
+
+export const addBalance = async (connection, uid, amount) => {
+  const [result] = await connection.execute(
+    'UPDATE KodUser SET balance = balance + ? WHERE uid = ?',
+    [amount, uid]
+  );
+  return result.affectedRows === 1;
+};
+
+/**
  * Verify password
  */
 export const verifyPassword = async (password, hashedPassword) => {

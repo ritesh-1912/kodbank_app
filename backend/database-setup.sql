@@ -25,3 +25,28 @@ CREATE TABLE IF NOT EXISTS UserToken (
     INDEX idx_uid (uid),
     INDEX idx_expairy (expairy)
 );
+
+-- Card table (one or more per user)
+CREATE TABLE IF NOT EXISTS Card (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NOT NULL,
+    last_four VARCHAR(4) NOT NULL,
+    card_type ENUM('debit', 'credit') DEFAULT 'debit',
+    brand VARCHAR(20) DEFAULT 'Visa',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (uid) REFERENCES KodUser(uid) ON DELETE CASCADE,
+    INDEX idx_uid (uid)
+);
+
+-- Transaction history
+CREATE TABLE IF NOT EXISTS Transaction (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    uid INT NOT NULL,
+    type ENUM('credit', 'debit') NOT NULL,
+    amount DECIMAL(15, 2) NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (uid) REFERENCES KodUser(uid) ON DELETE CASCADE,
+    INDEX idx_uid (uid),
+    INDEX idx_created (created_at)
+);

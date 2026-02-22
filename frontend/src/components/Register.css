@@ -198,6 +198,62 @@
   margin-bottom: 20px;
 }
 
+/* Registration success – show UID */
+.auth-card-success {
+  text-align: center;
+}
+.auth-card-success .auth-title {
+  margin-top: 8px;
+}
+.success-check {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  animation: successPop 0.4s ease-out;
+}
+@keyframes successPop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.uid-display {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: rgba(249, 115, 22, 0.12);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  border-radius: 12px;
+  display: inline-block;
+}
+.uid-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.uid-value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #f97316;
+  font-variant-numeric: tabular-nums;
+}
+.btn-block {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 @media (max-width: 768px) {
   .auth-page.bank-theme {
     flex-direction: column;

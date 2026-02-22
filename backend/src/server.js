@@ -5,6 +5,9 @@ import dotenv from 'dotenv';
 import pool from './config/database.js';
 import authRoutes from './routes/authRoutes.js';
 import balanceRoutes from './routes/balanceRoutes.js';
+import cardsRoutes from './routes/cardsRoutes.js';
+import transactionsRoutes from './routes/transactionsRoutes.js';
+import transferRoutes from './routes/transferRoutes.js';
 
 dotenv.config();
 
@@ -44,6 +47,9 @@ app.use(cookieParser());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/balance', balanceRoutes);
+app.use('/api/cards', cardsRoutes);
+app.use('/api/transactions', transactionsRoutes);
+app.use('/api/transfer', transferRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

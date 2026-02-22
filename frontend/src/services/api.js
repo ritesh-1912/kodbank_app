@@ -35,4 +35,37 @@ export const checkBalance = async () => {
   return response.data;
 };
 
+/**
+ * Get user's cards (requires authentication)
+ */
+export const getCards = async () => {
+  const response = await api.get('/cards');
+  return response.data;
+};
+
+/**
+ * Get user's transactions (requires authentication)
+ * Optional params: limit, type ('credit'|'debit'), search
+ */
+export const getTransactions = async (params = {}) => {
+  const response = await api.get('/transactions', { params });
+  return response.data;
+};
+
+/**
+ * Transfer money to another user (toUsername or toUid, amount, note?)
+ */
+export const transfer = async (body) => {
+  const response = await api.post('/transfer', body);
+  return response.data;
+};
+
+/**
+ * Add a new card (body: cardType?: 'debit'|'credit', brand?: 'Visa'|'Mastercard')
+ */
+export const addCard = async (body = {}) => {
+  const response = await api.post('/cards', body);
+  return response.data;
+};
+
 export default api;

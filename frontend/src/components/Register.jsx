@@ -14,6 +14,7 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [registeredUid, setRegisteredUid] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -59,9 +60,10 @@ const Register = () => {
     if (!validateForm()) return;
     setLoading(true);
     setErrors({});
+    setRegisteredUid(null);
     try {
-      await register(formData);
-      navigate('/login', { state: { message: 'Registration successful! Please login.' } });
+      const data = await register(formData);
+      setRegisteredUid(data.uid != null ? data.uid : null);
     } catch (error) {
       const data = error.response?.data;
       const isHtml = typeof data === 'string' && data.includes('Serverless Function');
@@ -80,6 +82,37 @@ const Register = () => {
       setLoading(false);
     }
   };
+
+  if (registeredUid != null) {
+    return (
+      <div className="auth-page bank-theme">
+        <aside className="auth-sidebar">
+          <div className="auth-sidebar-logo">
+            <span className="auth-logo-icon">K</span>
+            <span className="auth-logo-text">Kodbank</span>
+          </div>
+          <p className="auth-sidebar-tagline">Secure banking, simplified.</p>
+          <nav className="auth-sidebar-nav">
+            <Link to="/login" className="auth-nav-link">Sign in</Link>
+          </nav>
+        </aside>
+        <main className="auth-main">
+          <div className="auth-card auth-card-success">
+            <div className="success-check">✓</div>
+            <h1 className="auth-title">Account created</h1>
+            <p className="auth-subtitle">Your unique customer ID (UID) has been assigned. Save it for reference.</p>
+            <div className="uid-display">
+              <span className="uid-label">Your UID</span>
+              <span className="uid-value">{registeredUid}</span>
+            </div>
+            <Link to="/login" className="btn-primary btn-block" style={{ textDecoration: 'none', textAlign: 'center', display: 'block', marginTop: '24px' }}>
+              Continue to Sign in
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-page bank-theme">

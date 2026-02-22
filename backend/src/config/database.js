@@ -46,6 +46,9 @@ const poolProxy = {
   },
   query(...args) {
     return getPool().query(...args);
+  },
+  getConnection() {
+    return getPool().getConnection();
   }
 };
 export default poolProxy;
